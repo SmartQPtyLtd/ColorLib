@@ -42,3 +42,20 @@ This project is licensed under the MIT License.
 ## Acknowledgments
 
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) for image processing.
+
+## Usage example
+```csharp
+using OpenColorLib;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static OpenColorLib.Colors;
+
+var Counts = ColorCountList(@"C:\yourimagefile.png");
+
+List<Color> Theme = GetThemeColors(Counts);
+
+foreach (var color in Theme)
+
+    Console.WriteLine($"{color.DisplayName} : {color.ColorFamily}");
+```
