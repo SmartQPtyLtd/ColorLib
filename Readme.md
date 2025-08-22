@@ -45,16 +45,11 @@ This project is licensed under the MIT License.
 
 ## Usage example
 ```csharp
-using OpenColorLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using static OpenColorLib.Colors;
 
 var Counts = ColorCountList(@"C:\yourimagefile.png");
 
-List<Color> Theme = GetThemeColors(Counts);
-
-foreach (var color in Theme)
-    Console.WriteLine($"{color.DisplayName} : {color.ColorFamily}");
+foreach (var color in GetThemeColors(Counts))
+    Console.WriteLine($"{color.DisplayName} : {color.ColorFamily}");
 ```
