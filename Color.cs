@@ -1,76 +1,48 @@
 ﻿using System;
+using static OpenColorLib.Colors;
 
 namespace OpenColorLib;
 
 public sealed record Color
 {
-    public Color(string name, string hex, bool isWebHex)
+    public Color(string hex, bool isWebHex, string? name = null)
     {
-        string useHex;
-        if (!isWebHex)
-            useHex = Colors.SystemHexToWebHex(hex);
-        else useHex = hex;
+        var useHex = !isWebHex ? SystemHexToWebHex(hex) : hex;
 
-        Name = !string.IsNullOrWhiteSpace(name) ? name :
-        throw new ArgumentException("Name cannot be null or empty.");
+        SystemHex = WebHexToSystemHex(useHex);
 
-        DisplayName = !string.IsNullOrWhiteSpace(name) ? Colors.SplitPascalCase(name) :
-        throw new ArgumentException("Name cannot be null or empty.");
+        WebHex = IsValidHex(in useHex) ? useHex.ToUpper() : throw HexStringError;
 
-        SystemHex = Colors.WebHexToSystemHex(useHex);
+        Rgba = WebHexToRgba(useHex);
 
-        WebHex = Colors.IsValidHex(in useHex) ? useHex.ToUpper() : throw Colors.HexStringError;
+        Name = !string.IsNullOrWhiteSpace(name) ? name : string.Concat('#', WebHex);
 
-        Rgba = Colors.WebHexToRgba(useHex);
+        DisplayName = !string.IsNullOrWhiteSpace(name) ? SplitPascalCase(name) : Name;
 
-        var byteArray = Colors.RgbaToArray(Rgba);
+        var byteArray = RgbaToArray(Rgba);
 
-        ColorFamily = Colors.GetColorFamily(byteArray);
-
-        IsTransparent = byteArray[3] < 1;
-    }
-
-    public Color(string hex, bool isWebHex)
-    {
-        string useHex;
-        if (!isWebHex)
-            useHex = Colors.SystemHexToWebHex(hex);
-        else useHex = hex;
-
-        SystemHex = Colors.WebHexToSystemHex(useHex);
-
-        WebHex = Colors.IsValidHex(in useHex) ? useHex.ToUpper() : throw Colors.HexStringError;
-
-        Rgba = Colors.WebHexToRgba(useHex);
-
-        Name = string.Concat('#', WebHex);
-
-        DisplayName = Name;
-
-        var byteArray = Colors.RgbaToArray(Rgba);
-
-        ColorFamily = Colors.GetColorFamily(byteArray);
+        ColorFamily = GetColorFamily(byteArray);
 
         IsTransparent = byteArray[3] < 1;
     }
 
     public Color(string rgba)
     {
-        var byteArray = Colors.RgbaToArray(rgba);
+        var byteArray = RgbaToArray(rgba);
 
         string hexString = Convert.ToHexString(byteArray);
 
-        SystemHex = Colors.WebHexToSystemHex(hexString);
+        SystemHex = WebHexToSystemHex(hexString);
 
-        WebHex = Colors.IsValidHex(in hexString) ? hexString.ToUpper() : throw Colors.HexStringError;
+        WebHex = IsValidHex(in hexString) ? hexString.ToUpper() : throw HexStringError;
 
-        Rgba = Colors.WebHexToRgba(hexString);
+        Rgba = WebHexToRgba(hexString);
 
         Name = string.Concat('#', WebHex);
 
         DisplayName = Name;
 
-        ColorFamily = Colors.GetColorFamily(byteArray);
+        ColorFamily = GetColorFamily(byteArray);
 
         IsTransparent = byteArray[3] < 1;
     }

@@ -388,26 +388,26 @@ public static class Colors
 
     public static Dictionary<Color, int> ColorCountList(string path)
     {
-        Dictionary<Color, int> Count = [];
+        Dictionary<Color, int> count = [];
         // Load the image
-        using (Image<Rgba32> image = Image.Load<Rgba32>(path))
+        using (var image = Image.Load<Rgba32>(path))
         {
             // Access pixel data using ProcessPixelRows
             image.ProcessPixelRows(accessor =>
             {
-                for (int y = 0; y < accessor.Height; y++)
+                for (var y = 0; y < accessor.Height; y++)
                 {
                     var pixelRow = accessor.GetRowSpan(y);
 
-                    for (int x = 0; x < accessor.Width; x++)
+                    for (var x = 0; x < accessor.Width; x++)
                     {
-                        Rgba32 pixel = pixelRow[x];
+                        var pixel = pixelRow[x];
 
                         Color color = new(pixel.ToString());
 
-                        if (Count.TryGetValue(color, out int value))
-                            Count[color] = ++value;
-                        else Count.Add(color, 1);
+                        if (count.TryGetValue(color, out var value))
+                            count[color] = ++value;
+                        else count.Add(color, 1);
 
                         /*
                         byte red = pixel.R;
@@ -422,7 +422,7 @@ public static class Colors
             });
         }
 
-        return Count;
+        return count;
     }
 
     public static string GetColorFamily(byte[] rgba)
@@ -431,49 +431,49 @@ public static class Colors
         var g = rgba[1] / 255.0d;
         var b = rgba[2] / 255.0d;
 
-        string closest = "White";
-        double minDistance = double.MaxValue;
+        var closest = "White";
+        var minDistance = double.MaxValue;
 
         foreach (var kvp in Anchors)
         {
             var (ar, ag, ab) = kvp.Value;
-            double distance = Math.Sqrt(
+            var distance = Math.Sqrt(
                 Math.Pow(r - ar, 2) +
                 Math.Pow(g - ag, 2) +
                 Math.Pow(b - ab, 2)
             );
 
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                closest = kvp.Key;
-            }
+            if (!(distance < minDistance))
+                continue;
+            
+            minDistance = distance;
+            closest = kvp.Key;
         }
 
         return closest;
     }
 
-    public static List<Color> GetThemeColors(in Dictionary<Color, int> colorCountList, int count = 4)
+    public static List<Color> GetThemeColors(in Dictionary<Color, int> colorCountList, int count = 8)
     {
-        List<Color> Theme = [];
+        List<Color> theme = [];
         List<string> shortList = [];
         foreach (var color in colorCountList.OrderByDescending(x => x.Value))
         {
             if (color.Key.IsTransparent)
                 continue;
 
-            if (Theme.Count > (count - 1))
+            if (theme.Count > (count - 1))
                 break;
 
             if (shortList.Contains(color.Key.ColorFamily))
                 continue;
 
             shortList.Add(color.Key.ColorFamily);
-            Theme.Add(color.Key);
+            theme.Add(color.Key);
         }
 
         shortList.Clear();
-        return Theme;
+        return theme;
     }
 
     public static bool IsValidHex(in string hex) => hex.Length == 8 && hex.All(Uri.IsHexDigit);
@@ -574,8 +574,9 @@ public static class Colors
         var fields = typeof(Colors).GetFields();
         foreach (var field in fields)
         {
-            if (field.IsLiteral && !field.IsInitOnly && field.FieldType == typeof(string))
-                yield return new Color(field.Name, field!.GetValue(typeof(Colors))!.ToString()!, false);
+            if (field is { IsLiteral: true, IsInitOnly: false } && field.FieldType == typeof(string))
+                yield return new Color(field.GetValue(typeof(Colors))!.ToString()!, false, field.Name);
+
         }
     }
 
@@ -586,7 +587,7 @@ public static class Colors
         List<Color> tList = [];
         foreach (var groupedList in list.GroupBy(x => x.ColorFamily))
         {
-            tList = [.. groupedList];
+            tList.AddRange(groupedList);
             tList.Sort(new AlphanumericComparer());
             sortedList.AddRange(tList);
             tList.Clear();
@@ -597,29 +598,26 @@ public static class Colors
 
     private static double ToAlphaValue(string doubleHex) => Convert.ToInt16(doubleHex, 16) * Divider;
 
-    public class AlphanumericComparer : IComparer<Color>
+    private class AlphanumericComparer : IComparer<Color>
     {
         public int Compare(Color? x, Color? y)
         {
             if (x is null || y is null)
                 return 0;
 
-            bool xIsNumeric = IsFullyNumeric(x.WebHex);
-            bool yIsNumeric = IsFullyNumeric(y.WebHex);
+            var xIsNumeric = IsFullyNumeric(x.WebHex);
+            var yIsNumeric = IsFullyNumeric(y.WebHex);
 
-            // Numbers come before letters
-            if (xIsNumeric && !yIsNumeric) return -1;
-            if (!xIsNumeric && yIsNumeric) return 1;
-
-            // If both are same type, use ordinal comparison
-            return string.CompareOrdinal(x.WebHex, y.WebHex);
+            return xIsNumeric switch
+            {
+                // Numbers come before letters
+                true when !yIsNumeric => -1,
+                false when yIsNumeric => 1,
+                // If both are the same type, use ordinal comparison
+                _ => string.CompareOrdinal(x.WebHex, y.WebHex)
+            };
         }
 
-        private static bool IsFullyNumeric(string input)
-        {
-            foreach (char c in input)
-                if (!char.IsDigit(c)) return false;
-            return true;
-        }
+        private static bool IsFullyNumeric(string input) => input.All(char.IsDigit);
     }
 }
