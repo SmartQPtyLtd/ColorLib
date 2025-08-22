@@ -11,8 +11,8 @@ public static class Colors
 {
     private static readonly IReadOnlyDictionary<string, (double R, double G, double B)> Anchors = new Dictionary<string, (double R, double G, double B)>()
     {
-        { "Dark", (0, 0, 0) },
-        { "Pastel", (1, 1, 1) },
+        { "Black", (0, 0, 0) },
+        { "White", (1, 1, 1) },
         { "Red", (1, 0, 0) },
         { "Green", (0, 1, 0) },
         { "Blue", (0, 0, 1) },
@@ -431,7 +431,7 @@ public static class Colors
         var g = rgba[1] / 255.0d;
         var b = rgba[2] / 255.0d;
 
-        string closest = "Dark";
+        string closest = "White";
         double minDistance = double.MaxValue;
 
         foreach (var kvp in Anchors)
