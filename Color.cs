@@ -23,11 +23,11 @@ public sealed record Color
 
         Rgba = Colors.WebHex_RGBA(useHex);
 
-        ByteArray = Colors.RgbaStringToArray(Rgba);
+        var byteArray = Colors.RgbaStringToArray(Rgba);
 
-        ColorFamily = Colors.GetColorFamily(ByteArray);
+        ColorFamily = Colors.GetColorFamily(byteArray);
 
-        IsTransparent = ByteArray[3] < 1;
+        IsTransparent = byteArray[3] < 1;
     }
 
     public Color(string hex, bool isWebHex)
@@ -47,18 +47,18 @@ public sealed record Color
 
         DisplayName = Name;
 
-        ByteArray = Colors.RgbaStringToArray(Rgba);
+        var byteArray = Colors.RgbaStringToArray(Rgba);
 
-        ColorFamily = Colors.GetColorFamily(ByteArray);
+        ColorFamily = Colors.GetColorFamily(byteArray);
 
-        IsTransparent = ByteArray[3] < 1;
+        IsTransparent = byteArray[3] < 1;
     }
 
     public Color(string rgba)
     {
-        ByteArray = Colors.RgbaStringToArray(rgba);
+        var byteArray = Colors.RgbaStringToArray(rgba);
 
-        string hexString = Convert.ToHexString(ByteArray);
+        string hexString = Convert.ToHexString(byteArray);
 
         SystemHex = Colors.WebHex_SystemHex(hexString);
 
@@ -70,16 +70,14 @@ public sealed record Color
 
         DisplayName = Name;
 
-        ColorFamily = Colors.GetColorFamily(ByteArray);
+        ColorFamily = Colors.GetColorFamily(byteArray);
 
-        IsTransparent = ByteArray[3] < 1;
+        IsTransparent = byteArray[3] < 1;
     }
 
     public readonly string? Name;
 
     public readonly string? DisplayName;
-
-    public readonly byte[] ByteArray;
 
     public readonly string SystemHex;
 
