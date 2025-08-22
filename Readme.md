@@ -24,16 +24,16 @@ Add a reference to the OpenColorLib project or include it in your solution.
 ### Usage
 ## API Overview
 
-- `Colors.ColorList`: All named colors as `Color` objects.
-- `Colors.ColorCountList(string path)`: Returns a dictionary of colors and their counts from an image.
-- `Colors.GetThemeColors(Dictionary<Color, int> colorCountList, int count = 4)`: Returns the most prominent theme colors.
-- `Colors.GetColorFamily(byte[] rgba)`: Returns the color family for a given RGBA value.
-- `Colors.IsValidHexString(string hexString)`: Validates an 8-character RGBA hex string.
-- `Colors.RgbaStringToArray(string rgba)`: Converts an RGBA string to a byte array.
-- `Colors.SplitPascalCase(string input)`: Splits PascalCase strings into readable text.
-- `Colors.SystemHex_WebHex(string systemHex)`: Converts system hex to web hex.
-- `Colors.WebHex_RGBA(string webHexColor)`: Converts web hex to RGBA string.
-- `Colors.WebHex_SystemHex(string webHexColor)`: Converts web hex to system hex.
+- `ColorList`: All named colors as `Color` records.
+- `ColorCountList(string path)`: Returns a dictionary of colors and their counts from an image.
+- `GetThemeColors(Dictionary<Color, int> colorCountList, int count = 4)`: Returns the most prominent theme colors.
+- `GetColorFamily(byte[] rgba)`: Returns the color family for a given RGBA value.
+- `IsValidHex(string hex)`: Validates an 8-character RGBA hex string.
+- `RgbaStringToArray(string rgba)`: Converts an RGBA string to a byte array.
+- `SplitPascalCase(string input)`: Splits PascalCase strings into readable text.
+- `SystemHexToWebHex(string systemHex)`: Converts system hex to web hex.
+- `WebHexToRgba(string webHex)`: Converts web hex to RGBA string.
+- `WebHexToSystemHex(string webHex)`: Converts web hex to system hex.
 
 ## License
 

@@ -8,7 +8,7 @@ public sealed record Color
     {
         string useHex;
         if (!isWebHex)
-            useHex = Colors.SystemHex_WebHex(hex);
+            useHex = Colors.SystemHexToWebHex(hex);
         else useHex = hex;
 
         Name = !string.IsNullOrWhiteSpace(name) ? name :
@@ -17,13 +17,13 @@ public sealed record Color
         DisplayName = !string.IsNullOrWhiteSpace(name) ? Colors.SplitPascalCase(name) :
         throw new ArgumentException("Name cannot be null or empty.");
 
-        SystemHex = Colors.WebHex_SystemHex(useHex);
+        SystemHex = Colors.WebHexToSystemHex(useHex);
 
-        WebHex = Colors.IsValidHexString(in useHex) ? useHex.ToUpper() : throw Colors.HexStringError;
+        WebHex = Colors.IsValidHex(in useHex) ? useHex.ToUpper() : throw Colors.HexStringError;
 
-        Rgba = Colors.WebHex_RGBA(useHex);
+        Rgba = Colors.WebHexToRgba(useHex);
 
-        var byteArray = Colors.RgbaStringToArray(Rgba);
+        var byteArray = Colors.RgbaToArray(Rgba);
 
         ColorFamily = Colors.GetColorFamily(byteArray);
 
@@ -34,20 +34,20 @@ public sealed record Color
     {
         string useHex;
         if (!isWebHex)
-            useHex = Colors.SystemHex_WebHex(hex);
+            useHex = Colors.SystemHexToWebHex(hex);
         else useHex = hex;
 
-        SystemHex = Colors.WebHex_SystemHex(useHex);
+        SystemHex = Colors.WebHexToSystemHex(useHex);
 
-        WebHex = Colors.IsValidHexString(in useHex) ? useHex.ToUpper() : throw Colors.HexStringError;
+        WebHex = Colors.IsValidHex(in useHex) ? useHex.ToUpper() : throw Colors.HexStringError;
 
-        Rgba = Colors.WebHex_RGBA(useHex);
+        Rgba = Colors.WebHexToRgba(useHex);
 
         Name = string.Concat('#', WebHex);
 
         DisplayName = Name;
 
-        var byteArray = Colors.RgbaStringToArray(Rgba);
+        var byteArray = Colors.RgbaToArray(Rgba);
 
         ColorFamily = Colors.GetColorFamily(byteArray);
 
@@ -56,15 +56,15 @@ public sealed record Color
 
     public Color(string rgba)
     {
-        var byteArray = Colors.RgbaStringToArray(rgba);
+        var byteArray = Colors.RgbaToArray(rgba);
 
         string hexString = Convert.ToHexString(byteArray);
 
-        SystemHex = Colors.WebHex_SystemHex(hexString);
+        SystemHex = Colors.WebHexToSystemHex(hexString);
 
-        WebHex = Colors.IsValidHexString(in hexString) ? hexString.ToUpper() : throw Colors.HexStringError;
+        WebHex = Colors.IsValidHex(in hexString) ? hexString.ToUpper() : throw Colors.HexStringError;
 
-        Rgba = Colors.WebHex_RGBA(hexString);
+        Rgba = Colors.WebHexToRgba(hexString);
 
         Name = string.Concat('#', WebHex);
 
