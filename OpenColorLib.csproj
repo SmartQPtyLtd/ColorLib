@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Title>Open Color Library</Title>
+    <Copyright>© 2025 SmartQ (Pty) Ltd</Copyright>
+    <PackageProjectUrl>https://github.com/SmartQPtyLtd/ColorLib</PackageProjectUrl>
+    <Description>OpenColorLib is a C# library for working with named colors, color conversions, and color analysis.</Description>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    <PackageTags>colors, detection, themes, families</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
