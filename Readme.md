@@ -56,6 +56,5 @@ var Counts = ColorCountList(@"C:\yourimagefile.png");
 List<Color> Theme = GetThemeColors(Counts);
 
 foreach (var color in Theme)
-
     Console.WriteLine($"{color.DisplayName} : {color.ColorFamily}");
 ```
